@@ -1,0 +1,41 @@
+<div id="map" style="height: 600px; width: 600%; border-radius: 12px;"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Create the map centered on Lakewood, Colorado
+  var map = L.map('map').setView([39.7047, -105.0814], 11);
+
+  // Add OpenStreetMap tiles
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Load your GeoJSON file from GitHub
+  fetch('https://raw.githubusercontent.com/sjc2partnership-maker/Daycare/refs/heads/main/Packet%201.json')
+    .then(response => response.json())
+    .then(data => {
+      var layer = L.geoJSON(data, {
+        onEachFeature: function (feature, layer) {
+          var p = feature.properties;
+
+          var popup = `
+            <strong>${p.Name || ''}</strong><br>
+            ${p.Category || ''}<br>
+            ${p.Address || ''}<br>
+            ${p.City || ''}, ${p.State || ''} ${p.Zip || ''}<br>
+            ${p.Phone || ''}
+          `;
+
+          layer.bindPopup(popup);
+        }
+      }).addTo(map);
+
+      // Zoom map to fit all pins
+      map.fitBounds(layer.getBounds(), { padding: [20, 20] });
+    })
+    .catch(error => console.error('Error loading GeoJSON:', error));
+});
+</script>
