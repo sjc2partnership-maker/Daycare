@@ -21,14 +21,14 @@ document.addEventListener("DOMContentLoaded", function () {
         onEachFeature: function (feature, layer) {
           var p = feature.properties;
 
-          var popup = `
-            <strong>${p.Name || ''}</strong><br>
-            ${p.Category || ''}<br>
-            ${p.Address || ''}<br>
-            ${p.City || ''}, ${p.State || ''} ${p.Zip || ''}<br>
-            ${p.Phone || ''}
-            ${p.Google Map || ''}
-          `;
+         var popup = `
+  <strong>${p.Name || ''}</strong><br>
+  ${p.Category || ''}<br>
+  ${p.Address || ''}<br>
+  ${p.City || ''}, ${p.State || ''} ${p.Zip || ''}<br>
+  ${p.Phone || ''}<br>
+  ${p["Google Map"] ? `<a href="${p["Google Map"]}" target="_blank">Open in Google Maps</a>` : ''}
+`;
 
           layer.bindPopup(popup);
         }
